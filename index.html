@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+    <script src="js/video_comparison.js"></script>
+    <title>Text-To-4D Dynamic Scene Generation</title>
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script type="text/javascript">
+        window.onload = function () {
+            const elements = document.querySelectorAll("a.viewerToggle");
+            let activeElements = null;
+            const textLabelMesh = 'Load mesh';
+            const textLabelVideo = 'Show video';
+            for (const element of elements) {
+                element.textContent = textLabelMesh;
+                element.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const target = e.target;
+                    const parent = target.parentElement;
+                    const iframe = parent.querySelector('.meshViewer');
+                    const canvas = parent.querySelector('.videoMerge');
+                    if (element.textContent == textLabelMesh) {
+                        if (activeElements != null) {
+                            disableMeshViewer(activeElements.iframe, activeElements.canvas, activeElements.a);
+                        }
+
+                        const sequence = target.dataset.sequence;
+                        const nframes = target.dataset.nframes;
+                        iframe.src = './render_draco.html?sequence=' + sequence;
+                        if (nframes) {
+                            iframe.src += '&nframes=' + nframes;
+                        }
+                        iframe.style.display = 'block';
+                        activeElements = {
+                            iframe: iframe,
+                            canvas: canvas,
+                            a: target,
+                        };
+                        canvas.style.display = 'none';
+                        target.textContent = textLabelVideo;
+                        const placeholder = parent.getElementsByClassName('animated-background');
+                        if (placeholder.length > 0){
+                            placeholder[0].style.display = 'none';
+                        }
+                    } else if (element.textContent == textLabelVideo) {
+                        disableMeshViewer(iframe, canvas, target);
+                        activeElements = null;
+                    }
+                });
+            }
+
+            function disableMeshViewer(iframe, canvas, a) {
+                iframe.src = '';
+                iframe.style.display = 'none';
+                canvas.style.display = 'block';
+                a.textContent = textLabelMesh;
+            }
+
+            return false;
+        };
+    </script>
+    <style type="text/css">
+
+        .meshViewer {
+            height: 256px;
+            width: 256px;
+            border: none;
+            overflow: hidden;
+            display: none;
+        }
+
+        .video {
+            height: 0px;
+        }
+
+        .viewerToggle {
+            display: block;
+            text-align: center;
+            overflow: hidden;
+            border: none;
+            margin: 10px;
+        }
+
+        .viewerToggle:hover {
+            text-decoration: none;
+        }
+
+        .vidContainer {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .largeContainer {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: flex-end;
+            row-gap: 30px;
+        }
+
+        .emptydiv {
+            height: 59px;
+        }
+
+        .div-only-desk {
+        }
+
+        .div-only-mobile {
+        }
+
+        @media screen and (min-width: 1240px) {
+            .div-only-desk {
+                visibility: visible;
+            }
+
+            .div-only-mobile {
+                visibility: hidden;
+                display: none;
+            }
+        }
+
+        @media screen and (max-width: 1239px) {
+            .div-only-desk {
+                visibility: hidden;
+                display: none;
+            }
+
+            .div-only-mobile {
+                visibility: visible;
+            }
+        }
+
+        @keyframes placeHolderShimmer {
+            0% {
+                background-position: -800px 0
+            }
+            100% {
+                background-position: 800px 0
+            }
+        }
+
+        .animated-background {
+            animation-duration: 2s;
+            animation-fill-mode: forwards;
+            animation-iteration-count: infinite;
+            animation-name: placeHolderShimmer;
+            animation-timing-function: linear;
+            background-color: #f6f7f8;
+            background: linear-gradient(to right, #eeeeee 8%, #bbbbbb 18%, #eeeeee 33%);
+            background-size: 800px 104px;
+            height: 256px;
+            width: 256px;
+            position: relative;
+        }
+
+    </style>
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/images/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/images/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="assets/images/favicon-16x16.png">
+
+    <meta property="og:site_name" content="Text-To-4D Dynamic Scene Generation"/>
+    <meta property="og:type" content="website"/>
+    <meta property="og:title" content="Text-To-4D Dynamic Scene Generation"/>
+    <meta property="og:description" content="Text-To-4D Dynamic Scene Generation, 2023."/>
+    <meta property="og:image" content="https://make-a-video3d.github.io/assets/images/teaser.png"/>
+
+    <meta name="twitter:title" content="Text-To-4D Dynamic Scene Generation"/>
+    <meta name="twitter:description"
+          content="In this paper we combine the benefits of video and 3D generative models and propose a system for text-to-4D (3D+time) generation."/>
+    <meta name="twitter:image" content="https://make-a-video3d.github.io/assets/images/teaser.png"/>
+</head>
+
+
+<style type="text/css">
+    body {
+        font-family: "Verdana"
+    }
+</style>
+
+
+<body>
+<div class="w3-container w3-padding-32">
+    <h1 class=" " style="text-align: center;">Text-To-4D Dynamic Scene Generation</h1>
+</div>
+
+<div class="container" style="max-width: 780px;">
+    <div class="row authors" style="padding-bottom: 15px;">
+        <div class="col-sm-4">
+            <h5 class="text-center">Uriel Singer*</h5>
+        </div>
+        <div class="col-sm-4">
+            <h5 class="text-center">Shelly Sheynin*</h5>
+        </div>
+        <div class="col-sm-4">
+            <h5 class="text-center">Adam Polyak*</h5>
+        </div>
+        <div class="col-sm-3">
+            <h5 class="text-center">Oron Ashual</h5>
+        </div>
+        <div class="col-sm-3">
+            <h5 class="text-center">Iurii Makarov</h5>
+        </div>
+        <div class="col-sm-3">
+            <h5 class="text-center">Filippos Kokkinos</h5>
+        </div>
+        <div class="col-sm-3">
+            <h5 class="text-center">Naman Goyal</h5>
+        </div>
+        <div class="col-sm-3">
+            <h5 class="text-center">Andrea Vedaldi</h5>
+        </div>
+        <div class="col-sm-3">
+            <h5 class="text-center">Devi Parikh</h5>
+        </div>
+        <div class="col-sm-3">
+            <h5 class="text-center">Justin Johnson</h5>
+        </div>
+        <div class="col-sm-3">
+            <h5 class="text-center">Yaniv Taigman</h5>
+        </div>
+    </div>
+    <div class="w3-display-container w3-content" style="max-width: 780px; padding-bottom: 15px;">
+        <h5 class="text-center" style="text-align: center;">Meta AI</h5>
+    </div>
+    <div class="w3-display-container w3-content" style="max-width: 780px; padding-bottom: 20px;">
+        <h6 class="text-center" style="text-align: center;"><sup>*</sup>Equal Contribution</h6>
+    </div>
+</div>
+
+<!-- Header -->
+<header class="w3-display-container w3-content w3-wide" style="max-width:500px;" id="home">
+    <video loop autoplay muted src="assets/rotating_grid.mp4" style="width:100%; "
+           poster="assets/images/teaser.png"></video>
+</header>
+
+<!-- Page content -->
+<div class="w3-content w3-padding" style="max-width:1200px">
+
+    <!-- Abstract Section -->
+    <div class="w3-container w3-padding-32">
+        <h2 class="w3-border-bottom w3-border-light-grey w3-padding-16">Abstract</h2>
+        <p>
+            We present MAV3D (<b>M</b>ake-<b>A</b>-<b>V</b>ideo<b>3D</b>), a method for generating three-dimensional
+            dynamic scenes from text descriptions. Our approach uses a 4D dynamic Neural Radiance Field (NeRF),
+            which is optimized for scene appearance, density, and motion consistency by querying a Text-to-Video (T2V)
+            diffusion-based model. The dynamic video output generated from the provided text can be viewed from any
+            camera location and angle, and can be composited into any 3D environment. MAV3D does not require any 3D
+            or 4D data and the T2V model is trained only on Text-Image pairs and unlabeled videos. We demonstrate the
+            effectiveness of our approach using comprehensive quantitative and qualitative experiments and show an
+            improvement over previously established internal baselines. To the best of our knowledge, our method is
+            the first to generate 3D dynamic scenes given a text description.
+        </p>
+    </div>
+
+
+    <!-- text-to-4d Section -->
+    <div class="w3-container w3-padding-32">
+        <h2 class="w3-border-bottom w3-border-light-grey w3-padding-16">Text-to-4D</h2>
+    </div>
+
+    <div class="w3-row-padding largeContainer">
+
+        <div class="w3-col l3 m6 w3-margin-bottom vidContainer">
+            <p valign="middle" halign="middle" align="center">A corgi playing with a ball.</p>
+            <video  class="video" id="mesh11" loop autoplay muted
+                   src="assets/text_to_4D/a_corgi_playing_with_a_ball.mp4"
+                   onplay="resizeAndPlay(this)"></video>
+            <div class="animated-background" id="mesh11PlaceHolder"></div>
+            <canvas height=0 class="videoMerge" id="mesh11Merge"></canvas>
+            <iframe src="" class="meshViewer" frameBorder="0"></iframe>
+            <a href="#" class="w3-button w3-light-grey w3-block viewerToggle"
+               data-sequence="a_corgi_playing_with_a_ball_drc"></a>
+        </div>
+
+        <div class="w3-col l3 m6 w3-margin-bottom vidContainer">
+            <p valign="middle" halign="middle" align="center">A panda dancing.</p>
+            <video  class="video" id="mesh12" loop autoplay muted
+                   src="assets/text_to_4D/a_panda_dancing.mp4"
+                   onplay="resizeAndPlay(this)"></video>
+            <div class="animated-background" id="mesh12PlaceHolder"></div>
+            <canvas height=0 class="videoMerge" id="mesh12Merge"></canvas>
+            <iframe src="" class="meshViewer" frameBorder="0"></iframe>
+            <a href="#" class="w3-button w3-light-grey w3-block viewerToggle" data-sequence="a_panda_dancing_drc"
+               data-nframes="42"></a>
+        </div>
+
+        <div class="w3-col l3 m6 w3-margin-bottom vidContainer">
+            <p valign="middle" halign="middle" align="center">A space shuttle launching.</p>
+            <video  class="video" id="mesh13" loop autoplay muted
+                   src="assets/text_to_4D/a_space_shuttle_launching.mp4"
+                   onplay="resizeAndPlay(this)"></video>
+            <div class="animated-background" id="mesh13PlaceHolder"></div>
+            <canvas height=0 class="videoMerge" id="mesh13Merge"></canvas>
+            <iframe src="" class="meshViewer" frameBorder="0"></iframe>
+            <a href="#" class="w3-button w3-light-grey w3-block viewerToggle"
+               data-sequence="a_space_shuttle_launching_drc"></a>
+        </div>
+
+        <div class="w3-col l3 m6 w3-margin-bottom vidContainer">
+            <p valign="middle" halign="middle" align="center">Clown fish swimming through the coral reef.</p>
+            <video  class="video" id="mesh14" loop autoplay muted
+                   src="assets/text_to_4D/Clown_fish_swimming_through_the_coral_reef.mp4"
+                   onplay="resizeAndPlay(this)"></video>
+            <div class="animated-background" id="mesh14PlaceHolder"></div>
+            <canvas height=0 class="videoMerge" id="mesh14Merge"></canvas>
+            <iframe src="" class="meshViewer" frameBorder="0"></iframe>
+            <a href="#" class="w3-button w3-light-grey w3-block viewerToggle"
+               data-sequence="Clown_fish_swimming_through_the_coral_reef_drc" data-nframes="58"></a>
+        </div>
+
+        <div class="w3-col l3 m6 w3-margin-bottom vidContainer">
+            <p valign="middle" halign="middle" align="center">An emoji of a baby panda reading a book.</p>
+            <video  class="video" id="mesh21" loop autoplay muted
+                   src="assets/text_to_4D/An_emoji_of_a_baby_panda_reading_a_book.mp4"
+                   onplay="resizeAndPlay(this)"></video>
+            <div class="animated-background" id="mesh21PlaceHolder"></div>
+            <canvas height=0 class="videoMerge" id="mesh21Merge"></canvas>
+            <iframe src="" class="meshViewer" frameBorder="0"></iframe>
+            <a href="#" class="w3-button w3-light-grey w3-block viewerToggle"
+               data-sequence="An_emoji_of_a_baby_panda_reading_a_book_drc"></a>
+        </div>
+
+        <div class="w3-col l3 m6 w3-margin-bottom vidContainer">
+            <p valign="middle" halign="middle" align="center">A dog riding a skateboard.</p>
+            <video  class="video" id="mesh22" loop autoplay muted
+                   src="assets/text_to_4D/Dog_riding_a_skateboard.mp4"
+                   onplay="resizeAndPlay(this)"></video>
+            <div class="animated-background" id="mesh22PlaceHolder"></div>
+            <canvas height=0 class="videoMerge" id="mesh22Merge"></canvas>
+            <iframe src="" class="meshViewer" frameBorder="0"></iframe>
+            <a href="#" class="w3-button w3-light-grey w3-block viewerToggle"
+               data-sequence="Dog_riding_a_skateboard_drc"></a>
+        </div>
+
+        <div class="w3-col l3 m6 w3-margin-bottom vidContainer">
+            <p valign="middle" halign="middle" align="center">3D rendering of a fox playing videogame.</p>
+            <video  class="video" id="mesh23" loop autoplay muted
+                   src="assets/text_to_4D/3D_rendering_of_a_fox_playing_videogame.mp4"
+                   onplay="resizeAndPlay(this)"></video>
+            <div class="animated-background" id="mesh23PlaceHolder"></div>
+            <canvas height=0 class="videoMerge" id="mesh23Merge"></canvas>
+            <iframe src="" class="meshViewer" frameBorder="0"></iframe>
+            <a href="#" class="w3-button w3-light-grey w3-block viewerToggle"
+               data-sequence="3D_rendering_of_a_fox_playing_videogame_180000_drc" data-nframes="62"></a>
+        </div>
+
+        <div class="w3-col l3 m6 w3-margin-bottom vidContainer">
+            <p valign="middle" halign="middle" align="center">A squirrel riding a motorcycle.</p>
+            <video  class="video" id="mesh24" loop autoplay muted
+                   src="assets/text_to_4D/a_squirrel_riding_a_motorcycle.mp4" onplay="resizeAndPlay(this) "
+            ></video>
+            <div class="animated-background" id="mesh24PlaceHolder"></div>
+            <canvas height=0 class="videoMerge" id="mesh24Merge"></canvas>
+            <iframe src="" class="meshViewer" frameBorder="0"></iframe>
+            <a href="#" class="w3-button w3-light-grey w3-block viewerToggle"
+               data-sequence="a_squirrel_riding_a_motorcycle_drc"></a>
+        </div>
+    </div>
+    <div class="w3-row-padding largeContainer">
+
+        <div class="w3-col l3 m6 vidContainer">
+            <p valign="middle" halign="middle" align="center">A crocodile playing a drum set.</p>
+            <video  class="video" id="video11" loop autoplay muted
+                   src="assets/text_to_4D/a_crocodile_playing_a_drum_set_depth_rgb.mp4"
+                   onplay="resizeAndPlay(this)"></video>
+            <div class="animated-background" id="video11PlaceHolder"></div>
+            <canvas height=0 class="videoMerge" id="video11Merge"></canvas>
+            <iframe src="" class="meshViewer" frameBorder="0"></iframe>
+            <a href="#" class="w3-button w3-light-grey w3-block viewerToggle"
+               data-sequence="a_crocodile_playing_a_drum_set_scc_drc" data-nframes="62"></a>
+        </div>
+
+        <div class="w3-col l3 m6 vidContainer">
+            <p valign="middle" halign="middle" align="center">A panda playing on a swing set.</p>
+            <video  class="video" id="video12" loop autoplay muted
+                   src="assets/text_to_4D/A_panda_playing_on_a_swing_set.mp4" onplay="resizeAndPlay(this)"
+            ></video>
+            <div class="animated-background" id="video12PlaceHolder"></div>
+            <canvas height=0 class="videoMerge" id="video12Merge"></canvas>
+            <iframe src="" class="meshViewer" frameBorder="0"></iframe>
+            <a href="#" class="w3-button w3-light-grey w3-block viewerToggle"
+               data-sequence="A_panda_playing_on_a_swing_set_170000_128_drc"></a>
+        </div>
+
+        <div class="w3-col l3 m6 vidContainer">
+            <p valign="middle" halign="middle" align="center">A goat drinking beer.</p>
+            <video  class="video" id="video13" loop autoplay muted
+                   src="assets/text_to_4D/a_goat_drinking_beer.mp4"
+                   onplay="resizeAndPlay(this)"></video>
+            <div class="animated-background" id="video13PlaceHolder"></div>
+            <canvas height=0 class="videoMerge" id="video13Merge"></canvas>
+            <iframe src="" class="meshViewer" frameBorder="0"></iframe>
+            <a href="#" class="w3-button w3-light-grey w3-block viewerToggle"
+               data-sequence="a_goat_drinking_beer_scc_drc"></a>
+        </div>
+
+        <div class="w3-col l3 m6 vidContainer">
+            <p valign="middle" halign="middle" align="center">A dog wearing a Superhero outfit with red cape flying
+                through the sky.</p>
+            <video  class="video" id="video14" loop autoplay muted
+                   src="assets/text_to_4D/A_dog_wearing_a_Superhero_outfit_with_red_cape_flying_through_the_sky.mp4"
+                   onplay="resizeAndPlay(this)"></video>
+            <div class="animated-background" id="video14PlaceHolder"></div>
+            <canvas height=0 class="videoMerge" id="video14Merge"></canvas>
+            <iframe src="" class="meshViewer" frameBorder="0"></iframe>
+            <a href="#" class="w3-button w3-light-grey w3-block viewerToggle"
+               data-sequence="A_dog_wearing_a_Superhero_outfit_with_red_cape_flying_through_the_sky_drc"></a>
+        </div>
+
+        <div class="w3-col l3 m6 vidContainer">
+            <p valign="middle" halign="middle" align="center">A silver humanoid robot flipping a coin.</p>
+            <video  class="video" id="video21" loop autoplay muted
+                   src="assets/text_to_4D/a_silver_humanoid_robot_flipping_a_coin.mp4"
+                   onplay="resizeAndPlay(this)"></video>
+            <div class="animated-background" id="video21PlaceHolder"></div>
+            <canvas height=0 class="videoMerge" id="video21Merge"></canvas>
+            <iframe src="" class="meshViewer" frameBorder="0"></iframe>
+            <a href="#" class="w3-button w3-light-grey w3-block viewerToggle"
+               data-sequence="a_silver_humanoid_robot_flipping_a_coin_drc"></a>
+        </div>
+
+        <div class="w3-col l3 m6 vidContainer">
+            <p valign="middle" halign="middle" align="center">An octopus is underwater.</p>
+            <video  class="video" id="video22" loop autoplay muted
+                   src="assets/text_to_4D/an_octopus_is_underwater.mp4"
+                   onplay="resizeAndPlay(this)"></video>
+            <div class="animated-background" id="video22PlaceHolder"></div>
+            <canvas height=0 class="videoMerge" id="video22Merge"></canvas>
+            <iframe src="" class="meshViewer" frameBorder="0"></iframe>
+            <a href="#" class="w3-button w3-light-grey w3-block viewerToggle"
+               data-sequence="an_octopus_is_underwater_drc"></a>
+        </div>
+
+        <div class="w3-col l3 m6 vidContainer">
+            <p valign="middle" halign="middle" align="center">A squirrel playing on a swing set.</p>
+            <video  class="video" id="video23" loop autoplay muted
+                   src="assets/text_to_4D/A_squirrel_playing_on_a_swing_set.mp4" onplay="resizeAndPlay(this)"
+            ></video>
+            <div class="animated-background" id="video23PlaceHolder"></div>
+            <canvas height=0 class="videoMerge" id="video23Merge"></canvas>
+            <iframe src="" class="meshViewer" frameBorder="0"></iframe>
+            <a href="#" class="w3-button w3-light-grey w3-block viewerToggle"
+               data-sequence="A_squirrel_playing_on_a_swing_set_170000_dnerf_drc"></a>
+        </div>
+
+        <div class="w3-col l3 m6 vidContainer">
+            <p valign="middle" halign="middle" align="center">An alien playing the piano.</p>
+            <video  class="video" id="video24" loop autoplay muted
+                   src="assets/text_to_4D/an_alien_playing_the_piano.mp4"
+                   onplay="resizeAndPlay(this)"></video>
+            <div class="animated-background" id="video24PlaceHolder"></div>
+            <canvas height=0 class="videoMerge" id="video24Merge"></canvas>
+            <iframe src="" class="meshViewer" frameBorder="0"></iframe>
+            <a href="#" class="w3-button w3-light-grey w3-block viewerToggle"
+               data-sequence="alien_piano_annealing_lr1e3_skip_t_drc"></a>
+        </div>
+
+        <div class="w3-col l3 m6 vidContainer">
+            <p valign="middle" halign="middle" align="center">A squirrel playing the saxophone.</p>
+            <video  class="video" id="video31" loop autoplay muted
+                   src="assets/text_to_4D/a_squirrel_playing_the_saxophone.mp4" onplay="resizeAndPlay(this)"
+            ></video>
+            <div class="animated-background" id="video31PlaceHolder"></div>
+            <canvas height=0 class="videoMerge" id="video31Merge"></canvas>
+            <iframe src="" class="meshViewer" frameBorder="0"></iframe>
+            <div class="emptydiv"></div>
+        </div>
+
+        <div class="w3-col l3 m6 vidContainer">
+            <p valign="middle" halign="middle" align="center">A humanoid robot playing the violin.</p>
+            <video  class="video" id="video32" loop autoplay muted
+                   src="assets/text_to_4D/a_humanoid_robot_playing_the_violin.mp4" onplay="resizeAndPlay(this)"
+            ></video>
+            <div class="animated-background" id="video32PlaceHolder"></div>
+            <canvas height=0 class="videoMerge" id="video32Merge"></canvas>
+            <iframe src="" class="meshViewer" frameBorder="0"></iframe>
+            <div class="emptydiv"></div>
+        </div>
+
+        <div class="w3-col l3 m6 vidContainer">
+            <p valign="middle" halign="middle" align="center">A kangaroo cooking a meal.</p>
+            <video  class="video" id="video33" loop autoplay muted src="assets/text_to_4D/A_kangaroo_cooking_a_meal.mp4"
+                   onplay="resizeAndPlay(this)"></video>
+            <div class="animated-background" id="video33PlaceHolder"></div>
+            <canvas height=0 class="videoMerge" id="video33Merge"></canvas>
+            <iframe src="" class="meshViewer" frameBorder="0"></iframe>
+            <div class="emptydiv"></div>
+        </div>
+
+        <div class="w3-col l3 m6 vidContainer">
+            <p valign="middle" halign="middle" align="center">A baby panda eating ice cream.</p>
+            <video  class="video" id="video34" loop autoplay muted
+                   src="assets/text_to_4D/baby_panda_eating_ice_cream.mp4" onplay="resizeAndPlay(this)"></video>
+            <div class="animated-background" id="video34PlaceHolder"></div>
+            <canvas height=0 class="videoMerge" id="video34Merge"></canvas>
+            <iframe src="" class="meshViewer" frameBorder="0"></iframe>
+            <div class="emptydiv"></div>
+        </div>
+
+        <div class="w3-col l3 m6 vidContainer">
+            <p valign="middle" halign="middle" align="center">A yorkie dog eating a donut.</p>
+            <video  class="video" id="video41" loop autoplay muted
+                   src="assets/text_to_4D/a_yorkie_dog_eating_a_donut.mp4" onplay="resizeAndPlay(this)"></video>
+            <div class="animated-background" id="video41PlaceHolder"></div>
+            <canvas height=0 class="videoMerge" id="video41Merge"></canvas>
+            <iframe src="" class="meshViewer" frameBorder="0"></iframe>
+            <div class="emptydiv"></div>
+        </div>
+
+        <div class="w3-col l3 m6 vidContainer">
+            <p valign="middle" halign="middle" align="center">A human skeleton drinking wine.</p>
+            <video  class="video" id="video42" loop autoplay muted
+                   src="assets/text_to_4D/a_human_skeleton_drinking_a_glass_of_red_wine.mp4"
+                   onplay="resizeAndPlay(this)"></video>
+            <div class="animated-background" id="video42PlaceHolder"></div>
+            <canvas height=0 class="videoMerge" id="video42Merge"></canvas>
+            <iframe src="" class="meshViewer" frameBorder="0"></iframe>
+            <div class="emptydiv"></div>
+        </div>
+
+        <div class="w3-col l3 m6 vidContainer">
+            <p valign="middle" halign="middle" align="center">Chihuahua running on the grass.</p>
+            <video  class="video" id="video43" loop autoplay muted
+                   src="assets/text_to_4D/Chihuahua_running_on_the_grass.mp4" onplay="resizeAndPlay(this)"></video>
+            <div class="animated-background" id="video43PlaceHolder"></div>
+            <canvas height=0 class="videoMerge" id="video43Merge"></canvas>
+            <iframe src="" class="meshViewer" frameBorder="0"></iframe>
+            <div class="emptydiv"></div>
+        </div>
+
+        <div class="w3-col l3 m6 vidContainer">
+            <p valign="middle" halign="middle" align="center">A bear driving a car.</p>
+            <video  class="video" id="video44" loop autoplay muted src="assets/text_to_4D/A_bear_driving_a_car.mp4"
+                   onplay="resizeAndPlay(this)"></video>
+            <div class="animated-background" id="video44PlaceHolder"></div>
+            <canvas height=0 class="videoMerge" id="video44Merge"></canvas>
+            <iframe src="" class="meshViewer" frameBorder="0"></iframe>
+            <div class="emptydiv"></div>
+        </div>
+
+        <div class="w3-col l3 m6 vidContainer">
+            <p valign="middle" halign="middle" align="center">A cat singing.</p>
+            <video  class="video" id="video51" loop autoplay muted
+                   src="assets/text_to_4D/a_cat_singing.mp4"
+                   onplay="resizeAndPlay(this)"></video>
+            <div class="animated-background" id="video51PlaceHolder"></div>
+            <canvas height=0 class="videoMerge" id="video51Merge"></canvas>
+            <iframe src="" class="meshViewer" frameBorder="0"></iframe>
+            <div class="emptydiv"></div>
+        </div>
+
+        <div class="w3-col l3 m6 vidContainer">
+            <p valign="middle" halign="middle" align="center">A squirrel Djing.</p>
+            <video  class="video" id="video52" loop autoplay muted
+                   src="assets/text_to_4D/a_squirrel_DJing.mp4"
+                   onplay="resizeAndPlay(this)"></video>
+            <div class="animated-background" id="video52PlaceHolder"></div>
+            <canvas height=0 class="videoMerge" id="video52Merge"></canvas>
+            <iframe src="" class="meshViewer" frameBorder="0"></iframe>
+            <div class="emptydiv"></div>
+        </div>
+
+        <div class="w3-col l3 m6 vidContainer">
+            <p valign="middle" halign="middle" align="center">Shark swimming in the desert.</p>
+            <video  class="video" id="video53" loop autoplay muted
+                   src="assets/text_to_4D/Shark_swimming_in_desert.mp4"
+                   onplay="resizeAndPlay(this)"></video>
+            <div class="animated-background" id="video53PlaceHolder"></div>
+            <canvas height=0 class="videoMerge" id="video53Merge"></canvas>
+            <iframe src="" class="meshViewer" frameBorder="0"></iframe>
+            <div class="emptydiv"></div>
+        </div>
+
+        <div class="w3-col l3 m6 vidContainer">
+            <p valign="middle" halign="middle" align="center">A monkey eating a candy bar.</p>
+            <video  class="video" id="video54" loop autoplay muted
+                   src="assets/text_to_4D/a_monkey_eating_a_candy_bar.mp4" onplay="resizeAndPlay(this)"></video>
+            <div class="animated-background" id="video54PlaceHolder"></div>
+            <canvas height=0 class="videoMerge" id="video54Merge"></canvas>
+            <iframe src="" class="meshViewer" frameBorder="0"></iframe>
+            <div class="emptydiv"></div>
+        </div>
+    </div>
+
+    <!-- Image to 4d Section -->
+    <div class="w3-container w3-padding-32" id="about">
+        <h2 class="w3-border-bottom w3-border-light-grey w3-padding-16">Image-to-4D</h2>
+    </div>
+
+    <table class="div-only-desk" align="center">
+        <tr style="border-bottom:5px solid black">
+            <td width="256" valign="middle" halign="middle" align="center"
+                style="padding-left: 10px; padding-bottom: 10px;">Input Image
+            </td>
+            <td></td>
+            <td width="256" valign="middle" halign="middle" align="center"
+                style="padding-left: 10px; padding-bottom: 10px;">Generate Video
+            </td>
+            <td style="padding-left: 10px; padding-bottom: 10px; border-left:5px solid black" width="256"
+                valign="middle" halign="middle" align="center">Input Image
+            </td>
+            <td></td>
+            <td width="256" valign="middle" halign="middle" align="center"
+                style="padding-left: 10px; padding-bottom: 10px;">Generate Video
+            </td>
+        </tr>
+        <tr style="border-bottom:5px solid black">
+            <td align="left" style="padding-left: 10px;"><img class="center" width="256" height="256"
+                                                              src="assets/image_to_4D/a%20cat%20shaped%20kite%20sits%20in%20the%20grass..png">
+            </td>
+            <td align="center"><font size="+10"> &#8594 </font></td>
+            <td align="left" style="padding-left: 10px;">
+                <video  class="video" id="video61" loop autoplay muted
+                       src="assets/image_to_4D/rotating_with_stopping3_a_cat_shaped_kite_sits_in_the_grass.mp4"
+                       onplay="resizeAndPlay(this)"></video>
+                <canvas height=0 class="videoMerge" id="video61Merge"></canvas>
+            </td>
+            <td style="border-left:5px solid black; padding-left: 10px;" align="left"><img class="center" width="256"
+                                                                                           height="256"
+                                                                                           src="assets/image_to_4D/a%20large%20blue%20bird%20standing%20next%20to%20a%20painting%20of%20flowers..png">
+            </td>
+            <td align="center"><font size="+10"> &#8594 </font></td>
+            <td align="left" style="padding-left: 10px;">
+                <video  class="video" id="video62" loop autoplay muted
+                       src="assets/image_to_4D/rotating_with_stopping3_a_large_blue_bird_standing_next_to_a_painting_of_flowers.mp4"
+                       onplay="resizeAndPlay(this)"></video>
+                <canvas height=0 class="videoMerge" id="video62Merge"></canvas>
+            </td>
+        </tr>
+        <tr>
+            <td align="left" style="padding-left: 10px;"><img class="center" width="256" height="256"
+                                                              src="assets/image_to_4D/a%20picture%20of%20a%20flamingo%20scratching%20its%20neck..png">
+            </td>
+            <td align="center"><font size="+10"> &#8594 </font></td>
+            <td align="left" style="padding-left: 10px;">
+                <video  class="video" id="video71" loop autoplay muted
+                       src="assets/image_to_4D/rotating_with_stopping3_a_picture_of_a_flamingo_scratching_its_neck.mp4"
+                       onplay="resizeAndPlay(this)"></video>
+                <canvas height=0 class="videoMerge" id="video71Merge"></canvas>
+            </td>
+            <td style="border-left:5px solid black; padding-left: 10px;" align="left"><img class="center" width="256"
+                                                                                           height="256"
+                                                                                           src="assets/image_to_4D/a%20small%20green%20vase%20displays%20some%20small%20yellow%20blooms..png">
+            </td>
+            <td align="center"><font size="+10"> &#8594 </font></td>
+            <td align="left" style="padding-left: 10px">
+                <video  class="video" id="video72" loop autoplay muted
+                       src="assets/image_to_4D/rotating_with_stopping3_a_small_green_vase_displays_some_small_yellow_blooms.mp4"
+                       onplay="resizeAndPlay(this)"></video>
+                <canvas height=0 class="videoMerge" id="video72Merge"></canvas>
+            </td>
+        </tr>
+    </table>
+    <div class="w3-row-padding div-only-mobile">
+        <div class="w3-col l3 m6">
+            <p valign="middle" halign="middle" align="center">Input Image</p>
+            <img class="center" width="256" height="256"
+                 src="assets/image_to_4D/a%20cat%20shaped%20kite%20sits%20in%20the%20grass..png" xml="" alt=""/>
+            <p valign="middle" halign="middle" align="center">Generated Video</p>
+            <video  class="video" id="video610" loop autoplay muted
+                   src="assets/image_to_4D/rotating_with_stopping3_a_cat_shaped_kite_sits_in_the_grass.mp4"
+                   onplay="resizeAndPlay(this)"></video>
+            <canvas height=0 class="videoMerge" id="video610Merge"></canvas>
+        </div>
+        <div class="w3-col l3 m6">
+            <p valign="middle" halign="middle" align="center">Input Image</p>
+            <img class="center" width="256" height="256"
+                 src="assets/image_to_4D/a%20large%20blue%20bird%20standing%20next%20to%20a%20painting%20of%20flowers..png"
+                 xml=""/>
+            <p valign="middle" halign="middle" align="center">Generated Video</p>
+            <video  class="video" id="video620" loop autoplay muted
+                   src="assets/image_to_4D/rotating_with_stopping3_a_large_blue_bird_standing_next_to_a_painting_of_flowers.mp4"
+                   onplay="resizeAndPlay(this)"></video>
+            <canvas height=0 class="videoMerge" id="video620Merge"></canvas>
+        </div>
+        <div class="w3-col l3 m6">
+            <p valign="middle" halign="middle" align="center">Input Image</p>
+            <img class="center" width="256" height="256"
+                 src="assets/image_to_4D/a%20picture%20of%20a%20flamingo%20scratching%20its%20neck..png" alt=""/>
+            <p valign="middle" halign="middle" align="center">Generated Video</p>
+            <video  class="video" id="video710" loop autoplay muted
+                   src="assets/image_to_4D/rotating_with_stopping3_a_picture_of_a_flamingo_scratching_its_neck.mp4"
+                   onplay="resizeAndPlay(this)"></video>
+            <canvas height=0 class="videoMerge" id="video710Merge"></canvas>
+        </div>
+        <div class="w3-col l3 m6">
+            <p valign="middle" halign="middle" align="center">Input Image</p>
+            <img class="center" width="256" height="256"
+                 src="assets/image_to_4D/a%20small%20green%20vase%20displays%20some%20small%20yellow%20blooms..png"
+                 alt=""/>
+            <p valign="middle" halign="middle" align="center">Generated Video</p>
+            <video  class="video" id="video720" loop autoplay muted
+                   src="assets/image_to_4D/rotating_with_stopping3_a_small_green_vase_displays_some_small_yellow_blooms.mp4"
+                   onplay="resizeAndPlay(this)"></video>
+            <canvas height=0 class="videoMerge" id="video720Merge"></canvas>
+        </div>
+    </div>
+    <!-- End page content -->
+</div>
+
+
+<!-- Footer -->
+<footer class="w3-center w3-black w3-padding-16">
+</footer>
+
+<script type="text/javascript">
+    vid_button = document.getElementsByClassName("mesh-button");
+    for (var i = 0; i < vid_button.length; i++) {
+        let id = vid_button[i].id;
+        let id_base = id.substring(0, id.length - 7);
+        let button = document.getElementById(id);
+        let canvas = document.getElementById(id_base + "Merge");
+        let model = document.getElementById(id_base + "-model");
+        button.onclick = function () {
+            canvas.style.display = "none";
+            button.style.display = "none";
+            model.style.display = "block";
+        }
+    }
+
+</script>
+</body>
+</html>
