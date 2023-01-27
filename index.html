@@ -11,6 +11,52 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
           integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <script type="text/javascript">
+        document.addEventListener("DOMContentLoaded", () => {
+            // Get the user-agent string
+            let userAgentString =
+                navigator.userAgent;
+
+            // Detect Chrome
+            let chromeAgent =
+                userAgentString.indexOf("Chrome") > -1;
+
+            // Detect Internet Explorer
+            let IExplorerAgent =
+                userAgentString.indexOf("MSIE") > -1 ||
+                userAgentString.indexOf("rv:") > -1;
+
+            // Detect Firefox
+            let firefoxAgent =
+                userAgentString.indexOf("Firefox") > -1;
+
+            // Detect Safari
+            let safariAgent =
+                userAgentString.indexOf("Safari") > -1;
+
+            // Discard Safari since it also matches Chrome
+            if ((chromeAgent) && (safariAgent))
+                safariAgent = false;
+
+            // Detect Opera
+            let operaAgent =
+                userAgentString.indexOf("OP") > -1;
+
+            // Discard Chrome since it also matches Opera
+            if ((chromeAgent) && (operaAgent))
+                chromeAgent = false;
+
+            if (chromeAgent && screen.width > 1000) {
+                let mobileElements = document.getElementsByClassName('div-only-mobile');
+                for (var i = 0; i < mobileElements.length; i++) {
+                    mobileElements[i].style.display = 'none';
+                }
+            } else {
+                let deskElements = document.getElementsByClassName('div-only-desk');
+                for (var i = 0; i < deskElements.length; i++) {
+                    deskElements[i].style.display = 'none';
+                }
+            }
+        });
         window.onload = function () {
             const elements = document.querySelectorAll("a.viewerToggle");
             let activeElements = null;
@@ -44,7 +90,7 @@
                         canvas.style.display = 'none';
                         target.textContent = textLabelVideo;
                         const placeholder = parent.getElementsByClassName('animated-background');
-                        if (placeholder.length > 0){
+                        if (placeholder.length > 0) {
                             placeholder[0].style.display = 'none';
                         }
                     } else if (element.textContent == textLabelVideo) {
@@ -113,27 +159,27 @@
         .div-only-mobile {
         }
 
-        @media screen and (min-width: 1240px) {
-            .div-only-desk {
-                visibility: visible;
-            }
+        /*@media screen and (min-width: 1240px) and (-webkit-min-device-pixel-ratio: 0) and (min-resolution: 0.001dpcm) {*/
+        /*    .div-only-desk {*/
+        /*        visibility: visible;*/
+        /*    }*/
 
-            .div-only-mobile {
-                visibility: hidden;
-                display: none;
-            }
-        }
+        /*    .div-only-mobile {*/
+        /*        visibility: hidden;*/
+        /*        display: none;*/
+        /*    }*/
+        /*}*/
 
-        @media screen and (max-width: 1239px) {
-            .div-only-desk {
-                visibility: hidden;
-                display: none;
-            }
+        /*@media screen and (max-width: 1239px) {*/
+        /*    .div-only-desk {*/
+        /*        visibility: hidden;*/
+        /*        display: none;*/
+        /*    }*/
 
-            .div-only-mobile {
-                visibility: visible;
-            }
-        }
+        /*    .div-only-mobile {*/
+        /*        visibility: visible;*/
+        /*    }*/
+        /*}*/
 
         @keyframes placeHolderShimmer {
             0% {
@@ -234,7 +280,7 @@
 
 <!-- Header -->
 <header class="w3-display-container w3-content w3-wide" style="max-width:500px;" id="home">
-    <video loop autoplay muted src="assets/rotating_grid.mp4" style="width:100%; "
+    <video loop autoplay muted playsinline src="assets/rotating_grid.mp4" style="width:100%; "
            poster="assets/images/teaser.png"></video>
 </header>
 
@@ -259,15 +305,15 @@
 
 
     <!-- text-to-4d Section -->
-    <div class="w3-container w3-padding-32">
+    <div class="w3-container w3-padding-32 div-only-desk">
         <h2 class="w3-border-bottom w3-border-light-grey w3-padding-16">Text-to-4D</h2>
     </div>
 
-    <div class="w3-row-padding largeContainer">
+    <div class="w3-row-padding largeContainer div-only-desk">
 
         <div class="w3-col l3 m6 w3-margin-bottom vidContainer">
             <p valign="middle" halign="middle" align="center">A corgi playing with a ball.</p>
-            <video  class="video" id="mesh11" loop autoplay muted
+            <video preload="none" class="video" id="mesh11" loop autoplay muted playsinline
                    src="assets/text_to_4D/a_corgi_playing_with_a_ball.mp4"
                    onplay="resizeAndPlay(this)"></video>
             <div class="animated-background" id="mesh11PlaceHolder"></div>
@@ -279,7 +325,7 @@
 
         <div class="w3-col l3 m6 w3-margin-bottom vidContainer">
             <p valign="middle" halign="middle" align="center">A panda dancing.</p>
-            <video  class="video" id="mesh12" loop autoplay muted
+            <video preload="none" class="video" id="mesh12" loop autoplay muted playsinline
                    src="assets/text_to_4D/a_panda_dancing.mp4"
                    onplay="resizeAndPlay(this)"></video>
             <div class="animated-background" id="mesh12PlaceHolder"></div>
@@ -291,7 +337,7 @@
 
         <div class="w3-col l3 m6 w3-margin-bottom vidContainer">
             <p valign="middle" halign="middle" align="center">A space shuttle launching.</p>
-            <video  class="video" id="mesh13" loop autoplay muted
+            <video preload="none" class="video" id="mesh13" loop autoplay muted playsinline
                    src="assets/text_to_4D/a_space_shuttle_launching.mp4"
                    onplay="resizeAndPlay(this)"></video>
             <div class="animated-background" id="mesh13PlaceHolder"></div>
@@ -303,7 +349,7 @@
 
         <div class="w3-col l3 m6 w3-margin-bottom vidContainer">
             <p valign="middle" halign="middle" align="center">Clown fish swimming through the coral reef.</p>
-            <video  class="video" id="mesh14" loop autoplay muted
+            <video preload="none" class="video" id="mesh14" loop autoplay muted playsinline
                    src="assets/text_to_4D/Clown_fish_swimming_through_the_coral_reef.mp4"
                    onplay="resizeAndPlay(this)"></video>
             <div class="animated-background" id="mesh14PlaceHolder"></div>
@@ -315,7 +361,7 @@
 
         <div class="w3-col l3 m6 w3-margin-bottom vidContainer">
             <p valign="middle" halign="middle" align="center">An emoji of a baby panda reading a book.</p>
-            <video  class="video" id="mesh21" loop autoplay muted
+            <video preload="none" class="video" id="mesh21" loop autoplay muted playsinline
                    src="assets/text_to_4D/An_emoji_of_a_baby_panda_reading_a_book.mp4"
                    onplay="resizeAndPlay(this)"></video>
             <div class="animated-background" id="mesh21PlaceHolder"></div>
@@ -327,7 +373,7 @@
 
         <div class="w3-col l3 m6 w3-margin-bottom vidContainer">
             <p valign="middle" halign="middle" align="center">A dog riding a skateboard.</p>
-            <video  class="video" id="mesh22" loop autoplay muted
+            <video preload="none" class="video" id="mesh22" loop autoplay muted playsinline
                    src="assets/text_to_4D/Dog_riding_a_skateboard.mp4"
                    onplay="resizeAndPlay(this)"></video>
             <div class="animated-background" id="mesh22PlaceHolder"></div>
@@ -339,7 +385,7 @@
 
         <div class="w3-col l3 m6 w3-margin-bottom vidContainer">
             <p valign="middle" halign="middle" align="center">3D rendering of a fox playing videogame.</p>
-            <video  class="video" id="mesh23" loop autoplay muted
+            <video preload="none" class="video" id="mesh23" loop autoplay muted playsinline
                    src="assets/text_to_4D/3D_rendering_of_a_fox_playing_videogame.mp4"
                    onplay="resizeAndPlay(this)"></video>
             <div class="animated-background" id="mesh23PlaceHolder"></div>
@@ -351,7 +397,7 @@
 
         <div class="w3-col l3 m6 w3-margin-bottom vidContainer">
             <p valign="middle" halign="middle" align="center">A squirrel riding a motorcycle.</p>
-            <video  class="video" id="mesh24" loop autoplay muted
+            <video preload="none" class="video" id="mesh24" loop autoplay muted playsinline
                    src="assets/text_to_4D/a_squirrel_riding_a_motorcycle.mp4" onplay="resizeAndPlay(this) "
             ></video>
             <div class="animated-background" id="mesh24PlaceHolder"></div>
@@ -361,11 +407,11 @@
                data-sequence="a_squirrel_riding_a_motorcycle_drc"></a>
         </div>
     </div>
-    <div class="w3-row-padding largeContainer">
+    <div class="w3-row-padding largeContainer div-only-desk">
 
         <div class="w3-col l3 m6 vidContainer">
             <p valign="middle" halign="middle" align="center">A crocodile playing a drum set.</p>
-            <video  class="video" id="video11" loop autoplay muted
+            <video preload="none" class="video" id="video11" loop autoplay muted playsinline
                    src="assets/text_to_4D/a_crocodile_playing_a_drum_set_depth_rgb.mp4"
                    onplay="resizeAndPlay(this)"></video>
             <div class="animated-background" id="video11PlaceHolder"></div>
@@ -377,7 +423,7 @@
 
         <div class="w3-col l3 m6 vidContainer">
             <p valign="middle" halign="middle" align="center">A panda playing on a swing set.</p>
-            <video  class="video" id="video12" loop autoplay muted
+            <video preload="none" class="video" id="video12" loop autoplay muted playsinline
                    src="assets/text_to_4D/A_panda_playing_on_a_swing_set.mp4" onplay="resizeAndPlay(this)"
             ></video>
             <div class="animated-background" id="video12PlaceHolder"></div>
@@ -389,7 +435,7 @@
 
         <div class="w3-col l3 m6 vidContainer">
             <p valign="middle" halign="middle" align="center">A goat drinking beer.</p>
-            <video  class="video" id="video13" loop autoplay muted
+            <video preload="none" class="video" id="video13" loop autoplay muted playsinline
                    src="assets/text_to_4D/a_goat_drinking_beer.mp4"
                    onplay="resizeAndPlay(this)"></video>
             <div class="animated-background" id="video13PlaceHolder"></div>
@@ -402,7 +448,7 @@
         <div class="w3-col l3 m6 vidContainer">
             <p valign="middle" halign="middle" align="center">A dog wearing a Superhero outfit with red cape flying
                 through the sky.</p>
-            <video  class="video" id="video14" loop autoplay muted
+            <video preload="none" class="video" id="video14" loop autoplay muted playsinline
                    src="assets/text_to_4D/A_dog_wearing_a_Superhero_outfit_with_red_cape_flying_through_the_sky.mp4"
                    onplay="resizeAndPlay(this)"></video>
             <div class="animated-background" id="video14PlaceHolder"></div>
@@ -414,7 +460,7 @@
 
         <div class="w3-col l3 m6 vidContainer">
             <p valign="middle" halign="middle" align="center">A silver humanoid robot flipping a coin.</p>
-            <video  class="video" id="video21" loop autoplay muted
+            <video preload="none" class="video" id="video21" loop autoplay muted playsinline
                    src="assets/text_to_4D/a_silver_humanoid_robot_flipping_a_coin.mp4"
                    onplay="resizeAndPlay(this)"></video>
             <div class="animated-background" id="video21PlaceHolder"></div>
@@ -426,7 +472,7 @@
 
         <div class="w3-col l3 m6 vidContainer">
             <p valign="middle" halign="middle" align="center">An octopus is underwater.</p>
-            <video  class="video" id="video22" loop autoplay muted
+            <video preload="none" class="video" id="video22" loop autoplay muted playsinline
                    src="assets/text_to_4D/an_octopus_is_underwater.mp4"
                    onplay="resizeAndPlay(this)"></video>
             <div class="animated-background" id="video22PlaceHolder"></div>
@@ -438,7 +484,7 @@
 
         <div class="w3-col l3 m6 vidContainer">
             <p valign="middle" halign="middle" align="center">A squirrel playing on a swing set.</p>
-            <video  class="video" id="video23" loop autoplay muted
+            <video preload="none" class="video" id="video23" loop autoplay muted playsinline
                    src="assets/text_to_4D/A_squirrel_playing_on_a_swing_set.mp4" onplay="resizeAndPlay(this)"
             ></video>
             <div class="animated-background" id="video23PlaceHolder"></div>
@@ -450,7 +496,7 @@
 
         <div class="w3-col l3 m6 vidContainer">
             <p valign="middle" halign="middle" align="center">An alien playing the piano.</p>
-            <video  class="video" id="video24" loop autoplay muted
+            <video preload="none" class="video" id="video24" loop autoplay muted playsinline
                    src="assets/text_to_4D/an_alien_playing_the_piano.mp4"
                    onplay="resizeAndPlay(this)"></video>
             <div class="animated-background" id="video24PlaceHolder"></div>
@@ -462,7 +508,7 @@
 
         <div class="w3-col l3 m6 vidContainer">
             <p valign="middle" halign="middle" align="center">A squirrel playing the saxophone.</p>
-            <video  class="video" id="video31" loop autoplay muted
+            <video preload="none" class="video" id="video31" loop autoplay muted playsinline
                    src="assets/text_to_4D/a_squirrel_playing_the_saxophone.mp4" onplay="resizeAndPlay(this)"
             ></video>
             <div class="animated-background" id="video31PlaceHolder"></div>
@@ -473,7 +519,7 @@
 
         <div class="w3-col l3 m6 vidContainer">
             <p valign="middle" halign="middle" align="center">A humanoid robot playing the violin.</p>
-            <video  class="video" id="video32" loop autoplay muted
+            <video preload="none" class="video" id="video32" loop autoplay muted playsinline
                    src="assets/text_to_4D/a_humanoid_robot_playing_the_violin.mp4" onplay="resizeAndPlay(this)"
             ></video>
             <div class="animated-background" id="video32PlaceHolder"></div>
@@ -484,7 +530,8 @@
 
         <div class="w3-col l3 m6 vidContainer">
             <p valign="middle" halign="middle" align="center">A kangaroo cooking a meal.</p>
-            <video  class="video" id="video33" loop autoplay muted src="assets/text_to_4D/A_kangaroo_cooking_a_meal.mp4"
+            <video preload="none" class="video" id="video33" loop autoplay muted playsinline
+                   src="assets/text_to_4D/A_kangaroo_cooking_a_meal.mp4"
                    onplay="resizeAndPlay(this)"></video>
             <div class="animated-background" id="video33PlaceHolder"></div>
             <canvas height=0 class="videoMerge" id="video33Merge"></canvas>
@@ -494,7 +541,7 @@
 
         <div class="w3-col l3 m6 vidContainer">
             <p valign="middle" halign="middle" align="center">A baby panda eating ice cream.</p>
-            <video  class="video" id="video34" loop autoplay muted
+            <video preload="none" class="video" id="video34" loop autoplay muted playsinline
                    src="assets/text_to_4D/baby_panda_eating_ice_cream.mp4" onplay="resizeAndPlay(this)"></video>
             <div class="animated-background" id="video34PlaceHolder"></div>
             <canvas height=0 class="videoMerge" id="video34Merge"></canvas>
@@ -504,7 +551,7 @@
 
         <div class="w3-col l3 m6 vidContainer">
             <p valign="middle" halign="middle" align="center">A yorkie dog eating a donut.</p>
-            <video  class="video" id="video41" loop autoplay muted
+            <video preload="none" class="video" id="video41" loop autoplay muted playsinline
                    src="assets/text_to_4D/a_yorkie_dog_eating_a_donut.mp4" onplay="resizeAndPlay(this)"></video>
             <div class="animated-background" id="video41PlaceHolder"></div>
             <canvas height=0 class="videoMerge" id="video41Merge"></canvas>
@@ -514,7 +561,7 @@
 
         <div class="w3-col l3 m6 vidContainer">
             <p valign="middle" halign="middle" align="center">A human skeleton drinking wine.</p>
-            <video  class="video" id="video42" loop autoplay muted
+            <video preload="none" class="video" id="video42" loop autoplay muted playsinline
                    src="assets/text_to_4D/a_human_skeleton_drinking_a_glass_of_red_wine.mp4"
                    onplay="resizeAndPlay(this)"></video>
             <div class="animated-background" id="video42PlaceHolder"></div>
@@ -525,7 +572,7 @@
 
         <div class="w3-col l3 m6 vidContainer">
             <p valign="middle" halign="middle" align="center">Chihuahua running on the grass.</p>
-            <video  class="video" id="video43" loop autoplay muted
+            <video preload="none" class="video" id="video43" loop autoplay muted playsinline
                    src="assets/text_to_4D/Chihuahua_running_on_the_grass.mp4" onplay="resizeAndPlay(this)"></video>
             <div class="animated-background" id="video43PlaceHolder"></div>
             <canvas height=0 class="videoMerge" id="video43Merge"></canvas>
@@ -535,7 +582,8 @@
 
         <div class="w3-col l3 m6 vidContainer">
             <p valign="middle" halign="middle" align="center">A bear driving a car.</p>
-            <video  class="video" id="video44" loop autoplay muted src="assets/text_to_4D/A_bear_driving_a_car.mp4"
+            <video preload="none" class="video" id="video44" loop autoplay muted playsinline
+                   src="assets/text_to_4D/A_bear_driving_a_car.mp4"
                    onplay="resizeAndPlay(this)"></video>
             <div class="animated-background" id="video44PlaceHolder"></div>
             <canvas height=0 class="videoMerge" id="video44Merge"></canvas>
@@ -545,7 +593,7 @@
 
         <div class="w3-col l3 m6 vidContainer">
             <p valign="middle" halign="middle" align="center">A cat singing.</p>
-            <video  class="video" id="video51" loop autoplay muted
+            <video preload="none" class="video" id="video51" loop autoplay muted playsinline
                    src="assets/text_to_4D/a_cat_singing.mp4"
                    onplay="resizeAndPlay(this)"></video>
             <div class="animated-background" id="video51PlaceHolder"></div>
@@ -556,7 +604,7 @@
 
         <div class="w3-col l3 m6 vidContainer">
             <p valign="middle" halign="middle" align="center">A squirrel Djing.</p>
-            <video  class="video" id="video52" loop autoplay muted
+            <video preload="none" class="video" id="video52" loop autoplay muted playsinline
                    src="assets/text_to_4D/a_squirrel_DJing.mp4"
                    onplay="resizeAndPlay(this)"></video>
             <div class="animated-background" id="video52PlaceHolder"></div>
@@ -567,7 +615,7 @@
 
         <div class="w3-col l3 m6 vidContainer">
             <p valign="middle" halign="middle" align="center">Shark swimming in the desert.</p>
-            <video  class="video" id="video53" loop autoplay muted
+            <video preload="none" class="video" id="video53" loop autoplay muted playsinline
                    src="assets/text_to_4D/Shark_swimming_in_desert.mp4"
                    onplay="resizeAndPlay(this)"></video>
             <div class="animated-background" id="video53PlaceHolder"></div>
@@ -578,7 +626,7 @@
 
         <div class="w3-col l3 m6 vidContainer">
             <p valign="middle" halign="middle" align="center">A monkey eating a candy bar.</p>
-            <video  class="video" id="video54" loop autoplay muted
+            <video preload="none" class="video" id="video54" loop autoplay muted playsinline
                    src="assets/text_to_4D/a_monkey_eating_a_candy_bar.mp4" onplay="resizeAndPlay(this)"></video>
             <div class="animated-background" id="video54PlaceHolder"></div>
             <canvas height=0 class="videoMerge" id="video54Merge"></canvas>
@@ -588,11 +636,11 @@
     </div>
 
     <!-- Image to 4d Section -->
-    <div class="w3-container w3-padding-32" id="about">
+    <div class="w3-container w3-padding-32 div-only-desk" id="about">
         <h2 class="w3-border-bottom w3-border-light-grey w3-padding-16">Image-to-4D</h2>
     </div>
 
-    <table class="div-only-desk" align="center">
+    <table class="div-only-desk div-only-desk" align="center">
         <tr style="border-bottom:5px solid black">
             <td width="256" valign="middle" halign="middle" align="center"
                 style="padding-left: 10px; padding-bottom: 10px;">Input Image
@@ -615,7 +663,7 @@
             </td>
             <td align="center"><font size="+10"> &#8594 </font></td>
             <td align="left" style="padding-left: 10px;">
-                <video  class="video" id="video61" loop autoplay muted
+                <video preload="none" class="video" id="video61" loop autoplay muted playsinline
                        src="assets/image_to_4D/rotating_with_stopping3_a_cat_shaped_kite_sits_in_the_grass.mp4"
                        onplay="resizeAndPlay(this)"></video>
                 <canvas height=0 class="videoMerge" id="video61Merge"></canvas>
@@ -626,7 +674,7 @@
             </td>
             <td align="center"><font size="+10"> &#8594 </font></td>
             <td align="left" style="padding-left: 10px;">
-                <video  class="video" id="video62" loop autoplay muted
+                <video preload="none" class="video" id="video62" loop autoplay muted playsinline
                        src="assets/image_to_4D/rotating_with_stopping3_a_large_blue_bird_standing_next_to_a_painting_of_flowers.mp4"
                        onplay="resizeAndPlay(this)"></video>
                 <canvas height=0 class="videoMerge" id="video62Merge"></canvas>
@@ -638,7 +686,7 @@
             </td>
             <td align="center"><font size="+10"> &#8594 </font></td>
             <td align="left" style="padding-left: 10px;">
-                <video  class="video" id="video71" loop autoplay muted
+                <video preload="none" class="video" id="video71" loop autoplay muted playsinline
                        src="assets/image_to_4D/rotating_with_stopping3_a_picture_of_a_flamingo_scratching_its_neck.mp4"
                        onplay="resizeAndPlay(this)"></video>
                 <canvas height=0 class="videoMerge" id="video71Merge"></canvas>
@@ -649,63 +697,66 @@
             </td>
             <td align="center"><font size="+10"> &#8594 </font></td>
             <td align="left" style="padding-left: 10px">
-                <video  class="video" id="video72" loop autoplay muted
+                <video preload="none" class="video" id="video72" loop autoplay muted playsinline
                        src="assets/image_to_4D/rotating_with_stopping3_a_small_green_vase_displays_some_small_yellow_blooms.mp4"
                        onplay="resizeAndPlay(this)"></video>
                 <canvas height=0 class="videoMerge" id="video72Merge"></canvas>
             </td>
         </tr>
     </table>
-    <div class="w3-row-padding div-only-mobile">
-        <div class="w3-col l3 m6">
-            <p valign="middle" halign="middle" align="center">Input Image</p>
-            <img class="center" width="256" height="256"
-                 src="assets/image_to_4D/a%20cat%20shaped%20kite%20sits%20in%20the%20grass..png" xml="" alt=""/>
-            <p valign="middle" halign="middle" align="center">Generated Video</p>
-            <video  class="video" id="video610" loop autoplay muted
-                   src="assets/image_to_4D/rotating_with_stopping3_a_cat_shaped_kite_sits_in_the_grass.mp4"
-                   onplay="resizeAndPlay(this)"></video>
-            <canvas height=0 class="videoMerge" id="video610Merge"></canvas>
-        </div>
-        <div class="w3-col l3 m6">
-            <p valign="middle" halign="middle" align="center">Input Image</p>
-            <img class="center" width="256" height="256"
-                 src="assets/image_to_4D/a%20large%20blue%20bird%20standing%20next%20to%20a%20painting%20of%20flowers..png"
-                 xml=""/>
-            <p valign="middle" halign="middle" align="center">Generated Video</p>
-            <video  class="video" id="video620" loop autoplay muted
-                   src="assets/image_to_4D/rotating_with_stopping3_a_large_blue_bird_standing_next_to_a_painting_of_flowers.mp4"
-                   onplay="resizeAndPlay(this)"></video>
-            <canvas height=0 class="videoMerge" id="video620Merge"></canvas>
-        </div>
-        <div class="w3-col l3 m6">
-            <p valign="middle" halign="middle" align="center">Input Image</p>
-            <img class="center" width="256" height="256"
-                 src="assets/image_to_4D/a%20picture%20of%20a%20flamingo%20scratching%20its%20neck..png" alt=""/>
-            <p valign="middle" halign="middle" align="center">Generated Video</p>
-            <video  class="video" id="video710" loop autoplay muted
-                   src="assets/image_to_4D/rotating_with_stopping3_a_picture_of_a_flamingo_scratching_its_neck.mp4"
-                   onplay="resizeAndPlay(this)"></video>
-            <canvas height=0 class="videoMerge" id="video710Merge"></canvas>
-        </div>
-        <div class="w3-col l3 m6">
-            <p valign="middle" halign="middle" align="center">Input Image</p>
-            <img class="center" width="256" height="256"
-                 src="assets/image_to_4D/a%20small%20green%20vase%20displays%20some%20small%20yellow%20blooms..png"
-                 alt=""/>
-            <p valign="middle" halign="middle" align="center">Generated Video</p>
-            <video  class="video" id="video720" loop autoplay muted
-                   src="assets/image_to_4D/rotating_with_stopping3_a_small_green_vase_displays_some_small_yellow_blooms.mp4"
-                   onplay="resizeAndPlay(this)"></video>
-            <canvas height=0 class="videoMerge" id="video720Merge"></canvas>
-        </div>
-    </div>
+    <!--    <div class="w3-row-padding div-only-mobile">-->
+    <!--        <div class="w3-col l3 m6">-->
+    <!--            <p valign="middle" halign="middle" align="center">Input Image</p>-->
+    <!--            <img class="center" width="256" height="256"-->
+    <!--                 src="assets/image_to_4D/a%20cat%20shaped%20kite%20sits%20in%20the%20grass..png" xml="" alt=""/>-->
+    <!--            <p valign="middle" halign="middle" align="center">Generated Video</p>-->
+    <!--            <video preload="none"  class="video" id="video610" loop autoplay muted playsinline-->
+    <!--                   src="assets/image_to_4D/rotating_with_stopping3_a_cat_shaped_kite_sits_in_the_grass.mp4"-->
+    <!--                   onplay="resizeAndPlay(this)"></video>-->
+    <!--            <canvas height=0 class="videoMerge" id="video610Merge"></canvas>-->
+    <!--        </div>-->
+    <!--        <div class="w3-col l3 m6">-->
+    <!--            <p valign="middle" halign="middle" align="center">Input Image</p>-->
+    <!--            <img class="center" width="256" height="256"-->
+    <!--                 src="assets/image_to_4D/a%20large%20blue%20bird%20standing%20next%20to%20a%20painting%20of%20flowers..png"-->
+    <!--                 xml=""/>-->
+    <!--            <p valign="middle" halign="middle" align="center">Generated Video</p>-->
+    <!--            <video preload="none"  class="video" id="video620" loop autoplay muted playsinline-->
+    <!--                   src="assets/image_to_4D/rotating_with_stopping3_a_large_blue_bird_standing_next_to_a_painting_of_flowers.mp4"-->
+    <!--                   onplay="resizeAndPlay(this)"></video>-->
+    <!--            <canvas height=0 class="videoMerge" id="video620Merge"></canvas>-->
+    <!--        </div>-->
+    <!--        <div class="w3-col l3 m6">-->
+    <!--            <p valign="middle" halign="middle" align="center">Input Image</p>-->
+    <!--            <img class="center" width="256" height="256"-->
+    <!--                 src="assets/image_to_4D/a%20picture%20of%20a%20flamingo%20scratching%20its%20neck..png" alt=""/>-->
+    <!--            <p valign="middle" halign="middle" align="center">Generated Video</p>-->
+    <!--            <video preload="none"  class="video" id="video710" loop autoplay muted playsinline-->
+    <!--                   src="assets/image_to_4D/rotating_with_stopping3_a_picture_of_a_flamingo_scratching_its_neck.mp4"-->
+    <!--                   onplay="resizeAndPlay(this)"></video>-->
+    <!--            <canvas height=0 class="videoMerge" id="video710Merge"></canvas>-->
+    <!--        </div>-->
+    <!--        <div class="w3-col l3 m6">-->
+    <!--            <p valign="middle" halign="middle" align="center">Input Image</p>-->
+    <!--            <img class="center" width="256" height="256"-->
+    <!--                 src="assets/image_to_4D/a%20small%20green%20vase%20displays%20some%20small%20yellow%20blooms..png"-->
+    <!--                 alt=""/>-->
+    <!--            <p valign="middle" halign="middle" align="center">Generated Video</p>-->
+    <!--            <video preload="none"  class="video" id="video720" loop autoplay muted playsinline-->
+    <!--                   src="assets/image_to_4D/rotating_with_stopping3_a_small_green_vase_displays_some_small_yellow_blooms.mp4"-->
+    <!--                   onplay="resizeAndPlay(this)"></video>-->
+    <!--            <canvas height=0 class="videoMerge" id="video720Merge"></canvas>-->
+    <!--        </div>-->
+    <!--    </div>-->
     <!-- End page content -->
 </div>
 
 
 <!-- Footer -->
-<footer class="w3-center w3-black w3-padding-16">
+<footer class="w3-center w3-black w3-padding-16 div-only-mobile">
+    <p>For optimal viewing of dynamic 3D videos, please access our website from a desktop using Chrome.</p>
+</footer>
+<footer class="w3-center w3-black w3-padding-16 div-only-desk">
 </footer>
 
 <script type="text/javascript">
