@@ -45,12 +45,16 @@
             if ((chromeAgent) && (operaAgent))
                 chromeAgent = false;
 
-            if (chromeAgent && screen.width > 1000) {
+            // If we're on (Chrome or Safari), and we're on Desktop
+            if ((chromeAgent || safariAgent) && screen.width > 1000) {
                 let mobileElements = document.getElementsByClassName('div-only-mobile');
                 for (var i = 0; i < mobileElements.length; i++) {
                     mobileElements[i].style.display = 'none';
                 }
             } else {
+                // Mitigation of perf/usability issues: limit to first 4 videos:
+                [...document.getElementsByClassName('vidContainer')].slice(4).forEach(vidContainer=>{vidContainer.remove()});
+
                 let deskElements = document.getElementsByClassName('div-only-desk');
                 for (var i = 0; i < deskElements.length; i++) {
                     deskElements[i].style.display = 'none';
@@ -121,7 +125,7 @@
         }
 
         .video {
-            height: 0px;
+            height: 1px;
         }
 
         .viewerToggle {
@@ -308,11 +312,11 @@
 
 
     <!-- text-to-4d Section -->
-    <div class="w3-container w3-padding-32 div-only-desk">
+    <div class="w3-container w3-padding-32">
         <h2 class="w3-border-bottom w3-border-light-grey w3-padding-16">Text-to-4D</h2>
     </div>
 
-    <div class="w3-row-padding largeContainer div-only-desk">
+    <div class="w3-row-padding largeContainer">
 
         <div class="w3-col l3 m6 w3-margin-bottom vidContainer">
             <p valign="middle" halign="middle" align="center">A corgi playing with a ball.</p>
@@ -320,7 +324,7 @@
                    src="assets/text_to_4D/a_corgi_playing_with_a_ball.mp4"
                    onplay="resizeAndPlay(this)"></video>
             <div class="animated-background" id="mesh11PlaceHolder"></div>
-            <canvas height=0 class="videoMerge" id="mesh11Merge"></canvas>
+            <canvas height=1 class="videoMerge" id="mesh11Merge"></canvas>
             <iframe src="" class="meshViewer" frameBorder="0"></iframe>
             <a href="#" class="w3-button w3-light-grey w3-block viewerToggle"
                data-sequence="a_corgi_playing_with_a_ball_drc"></a>
@@ -332,7 +336,7 @@
                    src="assets/text_to_4D/a_panda_dancing.mp4"
                    onplay="resizeAndPlay(this)"></video>
             <div class="animated-background" id="mesh12PlaceHolder"></div>
-            <canvas height=0 class="videoMerge" id="mesh12Merge"></canvas>
+            <canvas height=1 class="videoMerge" id="mesh12Merge"></canvas>
             <iframe src="" class="meshViewer" frameBorder="0"></iframe>
             <a href="#" class="w3-button w3-light-grey w3-block viewerToggle" data-sequence="a_panda_dancing_drc"
                data-nframes="42"></a>
@@ -344,7 +348,7 @@
                    src="assets/text_to_4D/a_space_shuttle_launching.mp4"
                    onplay="resizeAndPlay(this)"></video>
             <div class="animated-background" id="mesh13PlaceHolder"></div>
-            <canvas height=0 class="videoMerge" id="mesh13Merge"></canvas>
+            <canvas height=1 class="videoMerge" id="mesh13Merge"></canvas>
             <iframe src="" class="meshViewer" frameBorder="0"></iframe>
             <a href="#" class="w3-button w3-light-grey w3-block viewerToggle"
                data-sequence="a_space_shuttle_launching_drc"></a>
@@ -354,9 +358,9 @@
             <p valign="middle" halign="middle" align="center">Clown fish swimming through the coral reef.</p>
             <video preload="none" class="video" id="mesh14" loop autoplay muted playsinline
                    src="assets/text_to_4D/Clown_fish_swimming_through_the_coral_reef.mp4"
-                   onplay="resizeAndPlay(this)"></video>
+                   onplay="resizeAndPlay(this)" style="height: 100px"></video>
             <div class="animated-background" id="mesh14PlaceHolder"></div>
-            <canvas height=0 class="videoMerge" id="mesh14Merge"></canvas>
+            <canvas height=1 class="videoMerge" id="mesh14Merge"></canvas>
             <iframe src="" class="meshViewer" frameBorder="0"></iframe>
             <a href="#" class="w3-button w3-light-grey w3-block viewerToggle"
                data-sequence="Clown_fish_swimming_through_the_coral_reef_drc" data-nframes="58"></a>
@@ -368,7 +372,7 @@
                    src="assets/text_to_4D/An_emoji_of_a_baby_panda_reading_a_book.mp4"
                    onplay="resizeAndPlay(this)"></video>
             <div class="animated-background" id="mesh21PlaceHolder"></div>
-            <canvas height=0 class="videoMerge" id="mesh21Merge"></canvas>
+            <canvas height=1 class="videoMerge" id="mesh21Merge"></canvas>
             <iframe src="" class="meshViewer" frameBorder="0"></iframe>
             <a href="#" class="w3-button w3-light-grey w3-block viewerToggle"
                data-sequence="An_emoji_of_a_baby_panda_reading_a_book_drc"></a>
@@ -380,7 +384,7 @@
                    src="assets/text_to_4D/Dog_riding_a_skateboard.mp4"
                    onplay="resizeAndPlay(this)"></video>
             <div class="animated-background" id="mesh22PlaceHolder"></div>
-            <canvas height=0 class="videoMerge" id="mesh22Merge"></canvas>
+            <canvas height=1 class="videoMerge" id="mesh22Merge"></canvas>
             <iframe src="" class="meshViewer" frameBorder="0"></iframe>
             <a href="#" class="w3-button w3-light-grey w3-block viewerToggle"
                data-sequence="Dog_riding_a_skateboard_drc"></a>
@@ -392,7 +396,7 @@
                    src="assets/text_to_4D/3D_rendering_of_a_fox_playing_videogame.mp4"
                    onplay="resizeAndPlay(this)"></video>
             <div class="animated-background" id="mesh23PlaceHolder"></div>
-            <canvas height=0 class="videoMerge" id="mesh23Merge"></canvas>
+            <canvas height=1 class="videoMerge" id="mesh23Merge"></canvas>
             <iframe src="" class="meshViewer" frameBorder="0"></iframe>
             <a href="#" class="w3-button w3-light-grey w3-block viewerToggle"
                data-sequence="3D_rendering_of_a_fox_playing_videogame_180000_drc" data-nframes="62"></a>
@@ -404,13 +408,13 @@
                    src="assets/text_to_4D/a_squirrel_riding_a_motorcycle.mp4" onplay="resizeAndPlay(this) "
             ></video>
             <div class="animated-background" id="mesh24PlaceHolder"></div>
-            <canvas height=0 class="videoMerge" id="mesh24Merge"></canvas>
+            <canvas height=1 class="videoMerge" id="mesh24Merge"></canvas>
             <iframe src="" class="meshViewer" frameBorder="0"></iframe>
             <a href="#" class="w3-button w3-light-grey w3-block viewerToggle"
                data-sequence="a_squirrel_riding_a_motorcycle_drc"></a>
         </div>
     </div>
-    <div class="w3-row-padding largeContainer div-only-desk">
+    <div class="w3-row-padding largeContainer">
 
         <div class="w3-col l3 m6 vidContainer">
             <p valign="middle" halign="middle" align="center">A crocodile playing a drum set.</p>
@@ -418,7 +422,7 @@
                    src="assets/text_to_4D/a_crocodile_playing_a_drum_set_depth_rgb.mp4"
                    onplay="resizeAndPlay(this)"></video>
             <div class="animated-background" id="video11PlaceHolder"></div>
-            <canvas height=0 class="videoMerge" id="video11Merge"></canvas>
+            <canvas height=1 class="videoMerge" id="video11Merge"></canvas>
             <iframe src="" class="meshViewer" frameBorder="0"></iframe>
             <a href="#" class="w3-button w3-light-grey w3-block viewerToggle"
                data-sequence="a_crocodile_playing_a_drum_set_scc_drc" data-nframes="62"></a>
@@ -430,7 +434,7 @@
                    src="assets/text_to_4D/A_panda_playing_on_a_swing_set.mp4" onplay="resizeAndPlay(this)"
             ></video>
             <div class="animated-background" id="video12PlaceHolder"></div>
-            <canvas height=0 class="videoMerge" id="video12Merge"></canvas>
+            <canvas height=1 class="videoMerge" id="video12Merge"></canvas>
             <iframe src="" class="meshViewer" frameBorder="0"></iframe>
             <a href="#" class="w3-button w3-light-grey w3-block viewerToggle"
                data-sequence="A_panda_playing_on_a_swing_set_170000_128_drc"></a>
@@ -442,7 +446,7 @@
                    src="assets/text_to_4D/a_goat_drinking_beer.mp4"
                    onplay="resizeAndPlay(this)"></video>
             <div class="animated-background" id="video13PlaceHolder"></div>
-            <canvas height=0 class="videoMerge" id="video13Merge"></canvas>
+            <canvas height=1 class="videoMerge" id="video13Merge"></canvas>
             <iframe src="" class="meshViewer" frameBorder="0"></iframe>
             <a href="#" class="w3-button w3-light-grey w3-block viewerToggle"
                data-sequence="a_goat_drinking_beer_scc_drc"></a>
@@ -455,7 +459,7 @@
                    src="assets/text_to_4D/A_dog_wearing_a_Superhero_outfit_with_red_cape_flying_through_the_sky.mp4"
                    onplay="resizeAndPlay(this)"></video>
             <div class="animated-background" id="video14PlaceHolder"></div>
-            <canvas height=0 class="videoMerge" id="video14Merge"></canvas>
+            <canvas height=1 class="videoMerge" id="video14Merge"></canvas>
             <iframe src="" class="meshViewer" frameBorder="0"></iframe>
             <a href="#" class="w3-button w3-light-grey w3-block viewerToggle"
                data-sequence="A_dog_wearing_a_Superhero_outfit_with_red_cape_flying_through_the_sky_drc"></a>
@@ -467,7 +471,7 @@
                    src="assets/text_to_4D/a_silver_humanoid_robot_flipping_a_coin.mp4"
                    onplay="resizeAndPlay(this)"></video>
             <div class="animated-background" id="video21PlaceHolder"></div>
-            <canvas height=0 class="videoMerge" id="video21Merge"></canvas>
+            <canvas height=1 class="videoMerge" id="video21Merge"></canvas>
             <iframe src="" class="meshViewer" frameBorder="0"></iframe>
             <a href="#" class="w3-button w3-light-grey w3-block viewerToggle"
                data-sequence="a_silver_humanoid_robot_flipping_a_coin_drc"></a>
@@ -479,7 +483,7 @@
                    src="assets/text_to_4D/an_octopus_is_underwater.mp4"
                    onplay="resizeAndPlay(this)"></video>
             <div class="animated-background" id="video22PlaceHolder"></div>
-            <canvas height=0 class="videoMerge" id="video22Merge"></canvas>
+            <canvas height=1 class="videoMerge" id="video22Merge"></canvas>
             <iframe src="" class="meshViewer" frameBorder="0"></iframe>
             <a href="#" class="w3-button w3-light-grey w3-block viewerToggle"
                data-sequence="an_octopus_is_underwater_drc"></a>
@@ -491,7 +495,7 @@
                    src="assets/text_to_4D/A_squirrel_playing_on_a_swing_set.mp4" onplay="resizeAndPlay(this)"
             ></video>
             <div class="animated-background" id="video23PlaceHolder"></div>
-            <canvas height=0 class="videoMerge" id="video23Merge"></canvas>
+            <canvas height=1 class="videoMerge" id="video23Merge"></canvas>
             <iframe src="" class="meshViewer" frameBorder="0"></iframe>
             <a href="#" class="w3-button w3-light-grey w3-block viewerToggle"
                data-sequence="A_squirrel_playing_on_a_swing_set_170000_dnerf_drc"></a>
@@ -503,7 +507,7 @@
                    src="assets/text_to_4D/an_alien_playing_the_piano.mp4"
                    onplay="resizeAndPlay(this)"></video>
             <div class="animated-background" id="video24PlaceHolder"></div>
-            <canvas height=0 class="videoMerge" id="video24Merge"></canvas>
+            <canvas height=1 class="videoMerge" id="video24Merge"></canvas>
             <iframe src="" class="meshViewer" frameBorder="0"></iframe>
             <a href="#" class="w3-button w3-light-grey w3-block viewerToggle"
                data-sequence="alien_piano_annealing_lr1e3_skip_t_drc"></a>
@@ -515,7 +519,7 @@
                    src="assets/text_to_4D/a_squirrel_playing_the_saxophone.mp4" onplay="resizeAndPlay(this)"
             ></video>
             <div class="animated-background" id="video31PlaceHolder"></div>
-            <canvas height=0 class="videoMerge" id="video31Merge"></canvas>
+            <canvas height=1 class="videoMerge" id="video31Merge"></canvas>
             <iframe src="" class="meshViewer" frameBorder="0"></iframe>
             <div class="emptydiv"></div>
         </div>
@@ -526,7 +530,7 @@
                    src="assets/text_to_4D/a_humanoid_robot_playing_the_violin.mp4" onplay="resizeAndPlay(this)"
             ></video>
             <div class="animated-background" id="video32PlaceHolder"></div>
-            <canvas height=0 class="videoMerge" id="video32Merge"></canvas>
+            <canvas height=1 class="videoMerge" id="video32Merge"></canvas>
             <iframe src="" class="meshViewer" frameBorder="0"></iframe>
             <div class="emptydiv"></div>
         </div>
@@ -537,7 +541,7 @@
                    src="assets/text_to_4D/A_kangaroo_cooking_a_meal.mp4"
                    onplay="resizeAndPlay(this)"></video>
             <div class="animated-background" id="video33PlaceHolder"></div>
-            <canvas height=0 class="videoMerge" id="video33Merge"></canvas>
+            <canvas height=1 class="videoMerge" id="video33Merge"></canvas>
             <iframe src="" class="meshViewer" frameBorder="0"></iframe>
             <div class="emptydiv"></div>
         </div>
@@ -547,7 +551,7 @@
             <video preload="none" class="video" id="video34" loop autoplay muted playsinline
                    src="assets/text_to_4D/baby_panda_eating_ice_cream.mp4" onplay="resizeAndPlay(this)"></video>
             <div class="animated-background" id="video34PlaceHolder"></div>
-            <canvas height=0 class="videoMerge" id="video34Merge"></canvas>
+            <canvas height=1 class="videoMerge" id="video34Merge"></canvas>
             <iframe src="" class="meshViewer" frameBorder="0"></iframe>
             <div class="emptydiv"></div>
         </div>
@@ -557,7 +561,7 @@
             <video preload="none" class="video" id="video41" loop autoplay muted playsinline
                    src="assets/text_to_4D/a_yorkie_dog_eating_a_donut.mp4" onplay="resizeAndPlay(this)"></video>
             <div class="animated-background" id="video41PlaceHolder"></div>
-            <canvas height=0 class="videoMerge" id="video41Merge"></canvas>
+            <canvas height=1 class="videoMerge" id="video41Merge"></canvas>
             <iframe src="" class="meshViewer" frameBorder="0"></iframe>
             <div class="emptydiv"></div>
         </div>
@@ -568,7 +572,7 @@
                    src="assets/text_to_4D/a_human_skeleton_drinking_a_glass_of_red_wine.mp4"
                    onplay="resizeAndPlay(this)"></video>
             <div class="animated-background" id="video42PlaceHolder"></div>
-            <canvas height=0 class="videoMerge" id="video42Merge"></canvas>
+            <canvas height=1 class="videoMerge" id="video42Merge"></canvas>
             <iframe src="" class="meshViewer" frameBorder="0"></iframe>
             <div class="emptydiv"></div>
         </div>
@@ -578,7 +582,7 @@
             <video preload="none" class="video" id="video43" loop autoplay muted playsinline
                    src="assets/text_to_4D/Chihuahua_running_on_the_grass.mp4" onplay="resizeAndPlay(this)"></video>
             <div class="animated-background" id="video43PlaceHolder"></div>
-            <canvas height=0 class="videoMerge" id="video43Merge"></canvas>
+            <canvas height=1 class="videoMerge" id="video43Merge"></canvas>
             <iframe src="" class="meshViewer" frameBorder="0"></iframe>
             <div class="emptydiv"></div>
         </div>
@@ -589,7 +593,7 @@
                    src="assets/text_to_4D/A_bear_driving_a_car.mp4"
                    onplay="resizeAndPlay(this)"></video>
             <div class="animated-background" id="video44PlaceHolder"></div>
-            <canvas height=0 class="videoMerge" id="video44Merge"></canvas>
+            <canvas height=1 class="videoMerge" id="video44Merge"></canvas>
             <iframe src="" class="meshViewer" frameBorder="0"></iframe>
             <div class="emptydiv"></div>
         </div>
@@ -600,7 +604,7 @@
                    src="assets/text_to_4D/a_cat_singing.mp4"
                    onplay="resizeAndPlay(this)"></video>
             <div class="animated-background" id="video51PlaceHolder"></div>
-            <canvas height=0 class="videoMerge" id="video51Merge"></canvas>
+            <canvas height=1 class="videoMerge" id="video51Merge"></canvas>
             <iframe src="" class="meshViewer" frameBorder="0"></iframe>
             <div class="emptydiv"></div>
         </div>
@@ -611,7 +615,7 @@
                    src="assets/text_to_4D/a_squirrel_DJing.mp4"
                    onplay="resizeAndPlay(this)"></video>
             <div class="animated-background" id="video52PlaceHolder"></div>
-            <canvas height=0 class="videoMerge" id="video52Merge"></canvas>
+            <canvas height=1 class="videoMerge" id="video52Merge"></canvas>
             <iframe src="" class="meshViewer" frameBorder="0"></iframe>
             <div class="emptydiv"></div>
         </div>
@@ -622,7 +626,7 @@
                    src="assets/text_to_4D/Shark_swimming_in_desert.mp4"
                    onplay="resizeAndPlay(this)"></video>
             <div class="animated-background" id="video53PlaceHolder"></div>
-            <canvas height=0 class="videoMerge" id="video53Merge"></canvas>
+            <canvas height=1 class="videoMerge" id="video53Merge"></canvas>
             <iframe src="" class="meshViewer" frameBorder="0"></iframe>
             <div class="emptydiv"></div>
         </div>
@@ -632,7 +636,7 @@
             <video preload="none" class="video" id="video54" loop autoplay muted playsinline
                    src="assets/text_to_4D/a_monkey_eating_a_candy_bar.mp4" onplay="resizeAndPlay(this)"></video>
             <div class="animated-background" id="video54PlaceHolder"></div>
-            <canvas height=0 class="videoMerge" id="video54Merge"></canvas>
+            <canvas height=1 class="videoMerge" id="video54Merge"></canvas>
             <iframe src="" class="meshViewer" frameBorder="0"></iframe>
             <div class="emptydiv"></div>
         </div>
@@ -669,7 +673,7 @@
                 <video preload="none" class="video" id="video61" loop autoplay muted playsinline
                        src="assets/image_to_4D/rotating_with_stopping3_a_cat_shaped_kite_sits_in_the_grass.mp4"
                        onplay="resizeAndPlay(this)"></video>
-                <canvas height=0 class="videoMerge" id="video61Merge"></canvas>
+                <canvas height=1 class="videoMerge" id="video61Merge"></canvas>
             </td>
             <td style="border-left:5px solid black; padding-left: 10px;" align="left"><img class="center" width="256"
                                                                                            height="256"
@@ -680,7 +684,7 @@
                 <video preload="none" class="video" id="video62" loop autoplay muted playsinline
                        src="assets/image_to_4D/rotating_with_stopping3_a_large_blue_bird_standing_next_to_a_painting_of_flowers.mp4"
                        onplay="resizeAndPlay(this)"></video>
-                <canvas height=0 class="videoMerge" id="video62Merge"></canvas>
+                <canvas height=1 class="videoMerge" id="video62Merge"></canvas>
             </td>
         </tr>
         <tr>
@@ -692,7 +696,7 @@
                 <video preload="none" class="video" id="video71" loop autoplay muted playsinline
                        src="assets/image_to_4D/rotating_with_stopping3_a_picture_of_a_flamingo_scratching_its_neck.mp4"
                        onplay="resizeAndPlay(this)"></video>
-                <canvas height=0 class="videoMerge" id="video71Merge"></canvas>
+                <canvas height=1 class="videoMerge" id="video71Merge"></canvas>
             </td>
             <td style="border-left:5px solid black; padding-left: 10px;" align="left"><img class="center" width="256"
                                                                                            height="256"
@@ -703,7 +707,7 @@
                 <video preload="none" class="video" id="video72" loop autoplay muted playsinline
                        src="assets/image_to_4D/rotating_with_stopping3_a_small_green_vase_displays_some_small_yellow_blooms.mp4"
                        onplay="resizeAndPlay(this)"></video>
-                <canvas height=0 class="videoMerge" id="video72Merge"></canvas>
+                <canvas height=1 class="videoMerge" id="video72Merge"></canvas>
             </td>
         </tr>
     </table>
@@ -716,7 +720,7 @@
     <!--            <video preload="none"  class="video" id="video610" loop autoplay muted playsinline-->
     <!--                   src="assets/image_to_4D/rotating_with_stopping3_a_cat_shaped_kite_sits_in_the_grass.mp4"-->
     <!--                   onplay="resizeAndPlay(this)"></video>-->
-    <!--            <canvas height=0 class="videoMerge" id="video610Merge"></canvas>-->
+    <!--            <canvas height=1 class="videoMerge" id="video610Merge"></canvas>-->
     <!--        </div>-->
     <!--        <div class="w3-col l3 m6">-->
     <!--            <p valign="middle" halign="middle" align="center">Input Image</p>-->
@@ -727,7 +731,7 @@
     <!--            <video preload="none"  class="video" id="video620" loop autoplay muted playsinline-->
     <!--                   src="assets/image_to_4D/rotating_with_stopping3_a_large_blue_bird_standing_next_to_a_painting_of_flowers.mp4"-->
     <!--                   onplay="resizeAndPlay(this)"></video>-->
-    <!--            <canvas height=0 class="videoMerge" id="video620Merge"></canvas>-->
+    <!--            <canvas height=1 class="videoMerge" id="video620Merge"></canvas>-->
     <!--        </div>-->
     <!--        <div class="w3-col l3 m6">-->
     <!--            <p valign="middle" halign="middle" align="center">Input Image</p>-->
@@ -737,7 +741,7 @@
     <!--            <video preload="none"  class="video" id="video710" loop autoplay muted playsinline-->
     <!--                   src="assets/image_to_4D/rotating_with_stopping3_a_picture_of_a_flamingo_scratching_its_neck.mp4"-->
     <!--                   onplay="resizeAndPlay(this)"></video>-->
-    <!--            <canvas height=0 class="videoMerge" id="video710Merge"></canvas>-->
+    <!--            <canvas height=1 class="videoMerge" id="video710Merge"></canvas>-->
     <!--        </div>-->
     <!--        <div class="w3-col l3 m6">-->
     <!--            <p valign="middle" halign="middle" align="center">Input Image</p>-->
@@ -748,7 +752,7 @@
     <!--            <video preload="none"  class="video" id="video720" loop autoplay muted playsinline-->
     <!--                   src="assets/image_to_4D/rotating_with_stopping3_a_small_green_vase_displays_some_small_yellow_blooms.mp4"-->
     <!--                   onplay="resizeAndPlay(this)"></video>-->
-    <!--            <canvas height=0 class="videoMerge" id="video720Merge"></canvas>-->
+    <!--            <canvas height=1 class="videoMerge" id="video720Merge"></canvas>-->
     <!--        </div>-->
     <!--    </div>-->
 
@@ -782,7 +786,7 @@
 <footer class="w3-center w3-black w3-padding-16 div-only-desk">
 </footer>
 
-<script type="text/javascript">
+<script type="text/javascript" defer>
     vid_button = document.getElementsByClassName("mesh-button");
     for (var i = 0; i < vid_button.length; i++) {
         let id = vid_button[i].id;
@@ -796,6 +800,40 @@
             model.style.display = "block";
         }
     }
+
+    // TODO: Unify this with function in video_comparison.js
+    function waitForElementLoad(selector) {
+        return new Promise((resolve) => {
+            if (document.querySelector(selector)) {
+                return resolve(document.querySelector(selector));
+            }
+
+            const observer = new MutationObserver((_mutations) => {
+                if (document.querySelector(selector)) {
+                    resolve(document.querySelector(selector));
+                    observer.disconnect();
+                }
+            });
+
+            observer.observe(document.body, {
+                childList: true,
+                subtree: true,
+            });
+        });
+    }
+
+
+    startedPlaying = new Set();
+
+    [...document.getElementsByClassName('video')].forEach(video => {
+        video.oncanplay = (event) => {
+            const video = event.target
+            if (!startedPlaying.has(video.id)) {
+                startedPlaying.add(video.id)
+                resizeAndPlay(video)
+            }
+        }
+    })
 
 </script>
 </body>
