@@ -114,7 +114,7 @@ function resizeAndPlay(element) {
     element.play();
     element.style.height = "0px";  // Hide video without stopping it
     var placeholder = document.getElementById(element.id + "PlaceHolder");
-    if (placeholder){
+    if (placeholder) {
         placeholder.style.display = 'none';
     }
 
